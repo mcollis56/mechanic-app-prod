@@ -36,11 +36,11 @@ const routes = [
     meta: { requiresGuest: true }
   },
   {
-    path: '/app',
+    path: '/',
     component: MainLayout,
     meta: { requiresAuth: true },
     children: [
-      { path: '', name: 'jobs', component: JobsView },
+      { path: 'jobs', name: 'jobs', component: JobsView },
       { path: 'work-orders', name: 'work-orders', component: WorkOrdersView },
       { path: 'work-orders/create', name: 'work-order-create', component: WorkOrderCreateView },
       { path: 'work-orders/:id', name: 'work-order-detail', component: WorkOrderDetailView, props: true },
@@ -66,7 +66,7 @@ const routes = [
       }
     ]
   },
-  // catch-all route redirects unknown paths to home
+  // catch-all route redirects unknown paths to home (landing)
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 
@@ -90,7 +90,7 @@ router.beforeEach(async (to, from, next) => {
     } else if (to.meta.requiresGuest) {
       if (user) {
         // If logged in user hits landing or login, send them to dashboard
-        return next('/app')
+        return next('/jobs')
       }
       return next()
     }
