@@ -1,0 +1,259 @@
+<template>
+  <div class="work-order-list">
+    <h1>Work Orders</h1>
+    
+    <!-- Loading state -->
+    <div v-if="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading work orders...</p>
+    </div>
+
+    <!-- Error state -->
+    <div v-else-if="error" class="error-state">
+      <p class="error-message">❌ Failed to load work orders</p>
+      <p class="error-details">{{ error.message }}</p>
+      <button @click="fetchWorkOrders" class="retry-button">Retry</button>
+    </div>
+
+    <!-- Empty state -->
+    <div v-else-if="workOrders.length === 0" class="empty-state">
+      <p>📋 No work orders found</p>
+      <p class="empty-hint">Work orders will appear here once created</p>
+    </div>
+
+    <!-- Table of work orders -->
+    <div v-else>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="order in workOrders" :key="order.id">
+            <!-- Clickable ID links to detail page -->
+            <td>
+              <router-link :to="`/work-orders/${order.id}`">
+                {{ order.id }}
+              </router-link>
+            </td>
+            <!-- Display raw fields for now; you can replace IDs with names once you join tables -->
+            <td>{{ order.customer_id }}</td>
+            <td>{{ order.vehicle_id }}</td>
+            <td>
+              <span :class="getStatusClass(order.status)">
+                {{ order.status }}
+              </span>
+            </td>
+            <td>{{ new Date(order.created_at).toLocaleString() }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+import { supabase } from '@/supabaseClient.js' // FIXED: Use standard client
+
+// reactive state
+const workOrders = ref([])
+const loading = ref(true)
+const error = ref(null)
+
+// Helper function for status styling
+const getStatusClass = (status) => {
+  const classes = {
+    'draft': 'status-draft',
+    'in_progress': 'status-in-progress',
+    'completed': 'status-completed'
+  }
+  return classes[status] || 'status-default'
+}
+
+// fetch data from Supabase with proper error handling
+const fetchWorkOrders = async () => {
+  loading.value = true
+  error.value = null
+  
+  try {
+    console.log('🔄 Fetching work orders...')
+    
+    const { data, error: fetchError } = await supabase
+      .from('work_orders')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (fetchError) {
+      console.error('❌ Error fetching work orders:', fetchError)
+      throw fetchError
+    }
+    
+    console.log('✅ Work orders fetched:', data?.length || 0, 'items')
+    workOrders.value = data || []
+  } catch (err) {
+    console.error('❌ Unexpected error in fetchWorkOrders:', err)
+    error.value = err
+    workOrders.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+// run on component mount
+onMounted(() => {
+  console.log('🚀 WorkOrderList component mounted')
+  fetchWorkOrders()
+})
+
+onUnmounted(() => {
+  console.log('👋 WorkOrderList component unmounted')
+})
+</script>
+
+<style scoped>
+.work-order-list {
+  padding: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Hover effect for better UX */
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Loading state */
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error state */
+.error-state {
+  text-align: center;
+  padding: 3rem;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.error-message {
+  color: #c00;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.error-details {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.retry-button:hover {
+  background-color: #2980b9;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.empty-hint {
+  font-size: 0.9rem;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+/* Status badges */
+.status-draft {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-in-progress {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-completed {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-default {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: #e5e7eb;
+  color: #374151;
+}
+</style>

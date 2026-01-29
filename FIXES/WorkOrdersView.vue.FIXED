@@ -1,0 +1,66 @@
+<template>
+  <div class="work-orders-view">
+    <Suspense>
+      <WorkOrderList />
+      <template #fallback>
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading work orders...</p>
+        </div>
+      </template>
+    </Suspense>
+  </div>
+</template>
+
+<script setup>
+import { onMounted, onUnmounted, onErrorCaptured } from 'vue'
+import WorkOrderList from '@/components/WorkOrderList.vue'
+
+onMounted(() => {
+  console.log('📄 WorkOrdersView mounted')
+})
+
+onUnmounted(() => {
+  console.log('📄 WorkOrdersView unmounted')
+})
+
+onErrorCaptured((err, instance, info) => {
+  console.error('❌ Error captured in WorkOrdersView:')
+  console.error('  Error:', err)
+  console.error('  Component info:', info)
+  console.error('  Instance:', instance)
+  // Return false to propagate error to parent
+  return false
+})
+</script>
+
+<style scoped>
+.work-orders-view {
+  padding: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  font-size: 1.1rem;
+  color: #666;
+}
+</style>
