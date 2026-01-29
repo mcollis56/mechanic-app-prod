@@ -115,36 +115,37 @@ const startTrial = () => {
         <p class="text-slate-600 mt-2">Everything you need to run your shop.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
-        
-        <!-- Main Card ($99/mo) -->
+      <div class="max-w-lg mx-auto">
+        <!-- Main Card ($149/mo) -->
         <div class="bg-white rounded-2xl shadow-xl border-2 border-slate-900 p-8 relative transform hover:-translate-y-1 transition-transform">
           <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-amber-400 text-slate-900 px-4 py-1 rounded-full text-sm font-bold shadow-md">
-            MOST POPULAR
+            ALL-IN-ONE
           </div>
-          <h3 class="text-2xl font-bold text-slate-900 mb-2">The Workshop OS</h3>
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">The Professional Workshop System</h3>
           <div class="flex items-baseline mb-6">
-            <span class="text-5xl font-extrabold text-slate-900">$99</span>
+            <span class="text-5xl font-extrabold text-slate-900">$149</span>
             <span class="text-slate-600 ml-2">/month</span>
           </div>
-          <p class="text-slate-600 mb-6">The complete toolkit for modern mechanics.</p>
+          <p class="text-slate-600 mb-6">Everything you need. No hidden fees.</p>
           
           <ul class="space-y-4 mb-8 text-left">
             <li class="flex items-center text-slate-700">
-              <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
               Unlimited Jobs & Invoices
             </li>
             <li class="flex items-center text-slate-700">
-              <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-              Digital Vehicle Inspections (DVI)
+              <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              Digital Vehicle Inspections (Mobile App)
             </li>
-            <li class="flex items-center text-slate-700">
-              <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-              Customer & Vehicle Database
+            <li class="flex items-center text-slate-700 font-medium">
+              <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded mr-2 text-xs font-bold uppercase tracking-wide">BONUS</span>
+              SMS Marketing Suite (Reviews & Reminders)
             </li>
-            <li class="flex items-center text-slate-700">
-              <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-              Full Mobile App Access
+            <li class="flex items-center text-slate-700 font-medium">
+              <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded mr-2 text-xs font-bold uppercase tracking-wide">BONUS</span>
+              "White Glove" Data Migration (We move your data for you)
             </li>
           </ul>
 
@@ -152,48 +153,9 @@ const startTrial = () => {
             @click="startTrial"
             class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-lg"
           >
-            Start Free Upgrade
+            Start 30-Day Free Trial
           </button>
         </div>
-
-        <!-- Add-On Badge (+$29/mo) -->
-        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-8 flex flex-col h-full relative overflow-hidden">
-          <div class="absolute top-0 right-0 bg-indigo-100 text-indigo-700 px-3 py-1 rounded-bl-lg text-xs font-bold uppercase tracking-wider">
-            Add-on
-          </div>
-          
-          <div class="mb-4">
-            <h3 class="text-xl font-bold text-slate-900">SMS Power-Up</h3>
-            <div class="flex items-baseline mt-2">
-              <span class="text-3xl font-bold text-slate-900">+$29</span>
-              <span class="text-slate-500 ml-1">/month</span>
-            </div>
-          </div>
-
-          <p class="text-slate-600 mb-6 flex-grow">Keep customers in the loop automatically without lifting a finger.</p>
-
-          <ul class="space-y-3 mb-8 text-sm">
-            <li class="flex items-start text-slate-700">
-              <span class="mr-2 text-xl">📱</span>
-              "Car Ready" Automated Texts
-            </li>
-            <li class="flex items-start text-slate-700">
-              <span class="mr-2 text-xl">🔔</span>
-              Service Reminders
-            </li>
-            <li class="flex items-start text-slate-700">
-              <span class="mr-2 text-xl">💬</span>
-              Two-way Messaging
-            </li>
-          </ul>
-
-          <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
-            <p class="text-xs text-indigo-800 font-medium text-center">
-              "Smart Addition" that pays for itself in one booking.
-            </p>
-          </div>
-        </div>
-
       </div>
     </section>
 
