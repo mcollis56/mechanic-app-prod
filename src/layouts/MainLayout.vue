@@ -5,7 +5,7 @@ import { supabase } from '../supabaseClient.js';
 
 const route = useRoute();
 const router = useRouter();
-const appName = import.meta.env.VITE_APP_NAME || 'Mechanic App';
+const appName = import.meta.env.VITE_APP_NAME || 'MechanicMonkey 🐵';
 const currentUser = ref(null);
 const isLoadingProfile = ref(true);
 const isSidebarOpen = ref(false);
@@ -158,9 +158,9 @@ onUnmounted(() => {
       :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     >
       <!-- Logo/Header -->
-      <div class="h-16 flex items-center px-6 border-b border-gray-200 justify-between">
-        <h1 class="text-xl font-bold text-gray-900">{{ appName }}</h1>
-        <button class="md:hidden text-gray-500 hover:text-gray-700" @click="isSidebarOpen = false">
+      <div class="h-16 flex items-center px-6 border-b border-gray-200 justify-between bg-amber-400">
+        <h1 class="text-xl font-bold text-slate-900 tracking-tight">{{ appName }}</h1>
+        <button class="md:hidden text-slate-900 hover:text-white" @click="isSidebarOpen = false">
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -172,8 +172,8 @@ onUnmounted(() => {
         <RouterLink
           to="/"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
-          :class="route.path === '/'
-            ? 'bg-purple-50 text-purple-700'
+          :class="($route.path === '/app' || $route.path === '/app/')
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -187,7 +187,7 @@ onUnmounted(() => {
           to="/work-orders"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path.startsWith('/work-orders')
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -201,7 +201,7 @@ onUnmounted(() => {
           to="/calendar"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/calendar'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -215,7 +215,7 @@ onUnmounted(() => {
           to="/customers"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/customers'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -229,7 +229,7 @@ onUnmounted(() => {
           to="/suppliers"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/suppliers'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -243,7 +243,7 @@ onUnmounted(() => {
           to="/inventory"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/inventory'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -257,7 +257,7 @@ onUnmounted(() => {
           to="/invoices"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/invoices'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -271,7 +271,7 @@ onUnmounted(() => {
           to="/archive"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/archive'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -285,7 +285,7 @@ onUnmounted(() => {
           to="/reports"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/reports'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
@@ -299,7 +299,7 @@ onUnmounted(() => {
           to="/admin"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="route.path === '/admin'
-            ? 'bg-purple-50 text-purple-700'
+            ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
         >
