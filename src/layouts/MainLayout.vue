@@ -155,8 +155,8 @@ onUnmounted(() => {
     <!-- Sidebar -->
     <aside
       class="bg-white border-r border-gray-200 flex-col fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:relative md:flex"
-      :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    >
+          :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+     >
       <!-- Logo/Header -->
       <div class="h-16 flex items-center px-6 border-b border-gray-200 justify-between bg-amber-400">
         <h1 class="text-xl font-bold text-slate-900 tracking-tight">{{ appName }}</h1>
@@ -170,7 +170,7 @@ onUnmounted(() => {
       <!-- Navigation -->
       <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         <RouterLink
-          to="/"
+          to="/app"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
           :class="($route.path === '/app' || $route.path === '/app/')
             ? 'bg-amber-100 text-slate-900'

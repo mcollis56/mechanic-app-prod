@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { supabase } from '../supabaseClient.js';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import JobEditor from '../components/JobEditor.vue';
 
@@ -26,13 +27,15 @@ const handleDateClick = (info) => {
 };
 
 const calendarOptions = ref({
-  plugins: [dayGridPlugin, interactionPlugin],
+  plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
   initialView: 'dayGridMonth',
   headerToolbar: {
     left: 'prev,next today',
     center: 'title',
-    right: 'dayGridMonth,dayGridWeek'
+    right: 'dayGridMonth,timeGridWeek,timeGridDay'
   },
+  slotMinTime: '08:00:00',
+  slotMaxTime: '18:00:00',
   events: [],
   editable: true,
   selectable: true,
