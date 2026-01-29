@@ -172,7 +172,7 @@ onUnmounted(() => {
         <RouterLink
           to="/jobs"
           class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
-          :class="($route.path === '/jobs' || $route.path === '/jobs/')"
+          :class="($route.path === '/jobs' || $route.path === '/jobs/')
             ? 'bg-amber-100 text-slate-900'
             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'"
           @click="isSidebarOpen = false"
