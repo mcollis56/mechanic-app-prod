@@ -75,18 +75,17 @@ const startTrial = () => {
 
         <!-- Right Visual (Placeholder) -->
         <div class="relative lg:h-full flex items-center justify-center">
-          <!-- Main Image Container -->
-          <div class="relative w-full aspect-[4/3] rounded-2xl overflow-visible z-10">
-            <div class="absolute inset-0 flex items-center justify-center transform -rotate-3 transition-transform hover:rotate-0 duration-500">
-               <img 
-                 src="/monkey.png" 
-                 alt="Mechanic Monkey" 
-                 class="w-full h-auto object-contain drop-shadow-2xl rounded-xl shadow-2xl"
-               />
-            </div>
-            
-            <!-- Simulated UI Element Overlay -->
-            <div class="absolute bottom-10 right-10 bg-white p-4 rounded-lg shadow-xl border border-slate-100 transform translate-y-4 rotate-[-2deg] z-20">
+          
+          <!-- Free-floating Monkey Image -->
+          <div class="relative z-10 transform -rotate-3 transition-transform hover:rotate-0 duration-500">
+             <img 
+               src="/monkey.png" 
+               alt="Mechanic Monkey" 
+               class="w-full max-h-[500px] object-contain drop-shadow-2xl filter mix-blend-multiply"
+             />
+             
+             <!-- Floating Badge -->
+             <div class="absolute bottom-10 right-0 bg-white p-4 rounded-lg shadow-xl border border-slate-100 transform translate-y-4 rotate-[-2deg] z-20">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
