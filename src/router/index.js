@@ -6,6 +6,7 @@ import JobsView from '@/views/JobsView.vue'
 import CalendarView from '@/views/CalendarView.vue'
 import WorkOrdersView from '@/views/WorkOrdersView.vue'
 import WorkOrderDetailView from '@/views/WorkOrderDetailView.vue' // NEW import
+import LandingPage from '@/views/LandingPage.vue'
 
 const AdminView = () => import('@/views/AdminView.vue')
 const AdminSettingsView = () => import('@/views/AdminSettingsView.vue')
@@ -23,13 +24,19 @@ const WorkOrderCreateView = () => import('@/views/WorkOrderCreate.vue')
 
 const routes = [
   {
+    path: '/',
+    name: 'landing',
+    component: LandingPage,
+    meta: { requiresGuest: true }
+  },
+  {
     path: '/login',
     name: 'login',
     component: LoginView,
     meta: { requiresGuest: true }
   },
   {
-    path: '/',
+    path: '/app',
     component: MainLayout,
     meta: { requiresAuth: true },
     children: [
@@ -82,7 +89,8 @@ router.beforeEach(async (to, from, next) => {
       return next()
     } else if (to.meta.requiresGuest) {
       if (user) {
-        return next('/')
+        // If logged in user hits landing or login, send them to dashboard
+        return next('/app')
       }
       return next()
     }
