@@ -60,6 +60,11 @@ async function importRows() {
         name: (r.name ?? r.customer_name ?? '').trim() || null,
         email: (r.email ?? '').trim() || null,
         phone: (r.phone ?? '').trim() || null,
+        legacy_id: (r.legacy_id ?? '').trim() || null,
+        address_line1: (r.address_line1 ?? r.address ?? '').trim() || null,
+        suburb: (r.suburb ?? '').trim() || null,
+        state: (r.state ?? '').trim() || null,
+        postcode: (r.postcode ?? '').trim() || null,
       }))
     } else if (kind.value === 'vehicles') {
       table = 'vehicles'
@@ -116,7 +121,7 @@ async function importRows() {
     <div class="row">
       <label>Paste CSV or JSON</label>
       <textarea class="area" v-model="raw" placeholder="CSV headers example:
-customers: name,email,phone
+customers: name,email,phone,legacy_id,address_line1,suburb,state,postcode
 vehicles: rego,make,model,vin
 jobs: status,problem_description,customer_name,vehicle_rego,created_at"></textarea>
     </div>

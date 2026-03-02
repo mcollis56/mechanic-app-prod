@@ -418,7 +418,7 @@ const mapping = reactive({})
 const resultMsg = ref('')
 
 const allowedColumns = {
-  customers: ['name','email','phone'],
+  customers: ['name','email','phone','legacy_id','address_line1','suburb','state','postcode'],
   vehicles:  ['rego','vin','make','model','year'],
   jobs:      ['status','problem_description','customer_id','vehicle_id']
 }
@@ -444,9 +444,9 @@ function onRawInput(){ if(raw.value.trim()) parse() }
 
 function sample(){
   if(importKind.value==='customers'){
-    raw.value = `name,email,phone
-John Smith,john@example.com,0400123456
-Mary Jones,mary@example.com,0400555123`
+    raw.value = `name,email,phone,legacy_id,address_line1,suburb,state,postcode
+John Smith,john@example.com,0400123456,CUST001,10 Main St,Southport,QLD,4215
+Mary Jones,mary@example.com,0400555123,CUST002,5 Beach Rd,Burleigh Heads,QLD,4220`
   }else if(importKind.value==='vehicles'){
     raw.value = `rego,vin,make,model,year
 DYP49Y,JTDBR32E520123456,Toyota,Corolla,2015
