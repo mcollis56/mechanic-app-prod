@@ -78,8 +78,8 @@ const performSearch = async () => {
     // Search Customers
     const customerQuery = supabase
       .from('customers')
-      .select('id, first_name, last_name, phone, email')
-      .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,phone.ilike.%${query}%,email.ilike.%${query}%`)
+      .select('id, name, phone, email')
+      .or(`name.ilike.%${query}%,phone.ilike.%${query}%,email.ilike.%${query}%`)
       .limit(5);
 
     // Search Vehicles
@@ -396,7 +396,7 @@ onUnmounted(() => {
                     class="px-4 py-3 hover:bg-purple-50 cursor-pointer transition-colors"
                   >
                     <div class="text-sm font-medium text-gray-900">
-                      {{ customer.first_name }} {{ customer.last_name }}
+                      {{ customer.name }}
                     </div>
                     <div class="text-xs text-gray-500">
                       {{ customer.phone }} • {{ customer.email }}
