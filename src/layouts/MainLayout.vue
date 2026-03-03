@@ -22,29 +22,17 @@ const fetchCurrentUser = async () => {
   try {
     isLoadingProfile.value = true;
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!user) {
       currentUser.value = null;
       return;
     }
 
-    // Set initial fallback data from auth session immediately
-    // so we don't show "Loading..." if the profile fetch is slow or missing
+    // Use auth session data directly — profiles table may not exist or have RLS issues
     currentUser.value = {
       email: user.email,
-      role: 'mechanic'
+      role: user.user_metadata?.role || 'mechanic'
     };
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
-    // Only update if we successfully got a profile row
-    if (profile && !profileError) {
-      currentUser.value = profile;
-    }
   } catch (err) {
     console.error('Error fetching current user:', err);
   } finally {
