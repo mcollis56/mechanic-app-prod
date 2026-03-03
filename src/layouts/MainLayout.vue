@@ -79,7 +79,7 @@ const performSearch = async () => {
     const customerQuery = supabase
       .from('customers')
       .select('id, name, phone, email')
-      .or(`name.ilike.%${query}%,phone.ilike.%${query}%,email.ilike.%${query}%`)
+      .ilike('name', `%${query}%`)
       .limit(5);
 
     // Search Vehicles
