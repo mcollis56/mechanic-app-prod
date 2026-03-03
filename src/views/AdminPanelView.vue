@@ -419,7 +419,7 @@ const resultMsg = ref('')
 
 const allowedColumns = {
   customers: ['name','email','phone','legacy_id','address_line1','suburb','state','postcode'],
-  vehicles:  ['rego','vin','make','model','year'],
+  vehicles:  ['rego','vin','make','model','year','customer_legacy_id'],
   jobs:      ['status','problem_description','customer_id','vehicle_id']
 }
 
@@ -448,9 +448,9 @@ function sample(){
 John Smith,john@example.com,0400123456,CUST001,10 Main St,Southport,QLD,4215
 Mary Jones,mary@example.com,0400555123,CUST002,5 Beach Rd,Burleigh Heads,QLD,4220`
   }else if(importKind.value==='vehicles'){
-    raw.value = `rego,vin,make,model,year
-DYP49Y,JTDBR32E520123456,Toyota,Corolla,2015
-ABC123,1HGCM82633A004352,Honda,Civic,2017`
+    raw.value = `rego,vin,make,model,year,customer_legacy_id
+DYP49Y,JTDBR32E520123456,Toyota,Corolla,2015,CUST001
+ABC123,1HGCM82633A004352,Honda,Civic,2017,CUST002`
   }else{
     raw.value = `status,problem_description,customer_id,vehicle_id
 Booking,Engine light on,00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000`
@@ -527,6 +527,12 @@ async function runImport(){
       if(vehicleTableMissing.value) throw new Error('Vehicles table not found in this project.')
       for(const r of rows){
         if(!r.rego && !r.vin){ fail++; continue }
+        // Resolve customer_legacy_id → customer_id
+        if(r.customer_legacy_id){
+          const { data, error } = await supabase.from('customers').select('id').eq('legacy_id', r.customer_legacy_id).limit(1)
+          if(!error && data?.[0]?.id) r.customer_id = data[0].id
+          delete r.customer_legacy_id // never send to vehicles table
+        }
         let id
         if(r.rego){
           const { data, error } = await supabase.from('vehicles').select('id').ilike('rego', r.rego).limit(1)

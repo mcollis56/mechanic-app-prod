@@ -25,12 +25,28 @@ const localVehicle = ref({
 
 const saving = ref(false);
 const errorMsg = ref('');
+const customerVehicles = ref([]);
+const loadingVehicles = ref(false);
+
+async function fetchCustomerVehicles(customerId) {
+  if (!customerId) { customerVehicles.value = []; return; }
+  loadingVehicles.value = true;
+  const { data, error } = await supabase
+    .from('vehicles')
+    .select('*')
+    .eq('customer_id', customerId)
+    .order('make', { ascending: true });
+  loadingVehicles.value = false;
+  if (!error) customerVehicles.value = data || [];
+}
 
 watch(() => props.customer, (newCustomer) => {
   if (newCustomer && Object.keys(newCustomer).length > 0) {
     localCustomer.value = { ...newCustomer };
+    fetchCustomerVehicles(newCustomer.id);
   } else {
     localCustomer.value = { name: '', email: '', phone: '' };
+    customerVehicles.value = [];
   }
   // Reset vehicle form when modal opens/customer changes
   localVehicle.value = { make: '', model: '', rego: '', vin: '', engine_code: '' };
@@ -104,6 +120,7 @@ const saveCustomer = async () => {
 const closeModal = () => {
   localCustomer.value = { name: '', email: '', phone: '' };
   localVehicle.value = { make: '', model: '', rego: '', vin: '', engine_code: '' };
+  customerVehicles.value = [];
   errorMsg.value = '';
   emit('update:modelValue', false);
 };
@@ -186,6 +203,25 @@ const closeModal = () => {
           <div class="mb-2">
             <label class="block text-xs font-medium text-gray-500">Engine Code</label>
             <input v-model="localVehicle.engine_code" placeholder="e.g. 2JZ-GTE" class="w-full p-2 border border-gray-300 rounded-md text-sm" />
+          </div>
+        </div>
+
+        <!-- Existing Vehicles Section (edit mode only) -->
+        <div v-if="localCustomer.id" class="mb-6">
+          <h3 class="text-lg font-semibold mb-3 border-b pb-1">Vehicles</h3>
+          <div v-if="loadingVehicles" class="text-sm text-gray-400">Loading vehicles…</div>
+          <div v-else-if="!customerVehicles.length" class="text-sm text-gray-400 italic">No vehicles on file</div>
+          <div v-else class="space-y-2">
+            <div
+              v-for="v in customerVehicles"
+              :key="v.id"
+              class="flex items-center gap-3 p-2 bg-gray-50 rounded-md border border-gray-200 text-sm"
+            >
+              <span class="font-medium text-gray-800">{{ [v.make, v.model].filter(Boolean).join(' ') || '—' }}</span>
+              <span v-if="v.year" class="text-gray-500">{{ v.year }}</span>
+              <span v-if="v.rego" class="ml-auto font-mono text-xs bg-white border border-gray-200 px-2 py-0.5 rounded">{{ v.rego }}</span>
+              <span v-if="v.vin" class="font-mono text-xs text-gray-400" :title="v.vin">VIN: {{ v.vin.length > 10 ? v.vin.slice(0,10) + '…' : v.vin }}</span>
+            </div>
           </div>
         </div>
 
