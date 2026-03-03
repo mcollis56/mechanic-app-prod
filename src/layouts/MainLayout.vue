@@ -75,27 +75,45 @@ const performSearch = async () => {
   showDropdown.value = true;
 
   try {
-    // Search Customers
-    const { data: custData, error: custErr } = await supabase
-      .from('customers')
-      .select('id, name, email')
-      .ilike('name', `%${query}%`)
-      .limit(5);
+    // Search Customers — simple ilike on name column only
+    let custData = [];
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('id, name, email')
+        .ilike('name', `%${query}%`)
+        .limit(5);
 
-    if (custErr) console.error('Customer search error:', custErr.message);
+      if (error) {
+        console.error('Customer search error:', error.code, error.message, error.details);
+      } else {
+        custData = data || [];
+      }
+    } catch (e) {
+      console.error('Customer search exception:', e);
+    }
 
-    // Search Vehicles
-    const { data: vehData, error: vehErr } = await supabase
-      .from('vehicles')
-      .select('id, customer_id, rego, vin, make, model')
-      .ilike('rego', `%${query}%`)
-      .limit(5);
+    // Search Vehicles — simple ilike on rego column only
+    let vehData = [];
+    try {
+      const { data, error } = await supabase
+        .from('vehicles')
+        .select('id, customer_id, rego, vin, make, year')
+        .ilike('rego', `%${query}%`)
+        .limit(5);
 
-    if (vehErr) console.error('Vehicle search error:', vehErr.message);
+      if (error) {
+        console.error('Vehicle search error:', error.code, error.message, error.details);
+      } else {
+        vehData = data || [];
+      }
+    } catch (e) {
+      console.error('Vehicle search exception:', e);
+    }
 
     searchResults.value = {
-      customers: custData || [],
-      vehicles: vehData || []
+      customers: custData,
+      vehicles: vehData
     };
   } catch (err) {
     console.error('Global search error:', err);
@@ -420,9 +438,9 @@ onUnmounted(() => {
                     class="px-4 py-3 hover:bg-purple-50 cursor-pointer transition-colors"
                   >
                     <div class="text-sm font-medium text-gray-900">
-                      {{ vehicle.make }} {{ vehicle.model }} — <span class="text-purple-600">{{ vehicle.rego }}</span>
+                      {{ vehicle.make }} {{ vehicle.year ? `(${vehicle.year})` : '' }} — <span class="text-purple-600">{{ vehicle.rego }}</span>
                     </div>
-                    <div class="text-xs text-gray-500">
+                    <div v-if="vehicle.vin" class="text-xs text-gray-500">
                       VIN: {{ vehicle.vin }}
                     </div>
                   </li>

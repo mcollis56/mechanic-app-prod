@@ -26,6 +26,8 @@ const newPart = ref({
   notes: ''
 });
 
+const supplierSearch = ref('');
+
 const totalPartsCost = computed(() => {
   return parts.value.reduce((sum, part) => {
     return sum + (part.quantity * part.unit_cost);
@@ -72,6 +74,31 @@ const fetchSuppliers = async () => {
   }
 };
 
+// Resolve supplier: match existing by name or auto-insert a new one
+const resolveSupplier = async () => {
+  const name = supplierSearch.value.trim();
+  if (!name) return null;
+
+  // Check if it matches an existing supplier
+  const existing = suppliers.value.find(
+    s => s.name.toLowerCase() === name.toLowerCase()
+  );
+  if (existing) return existing.id;
+
+  // Auto-insert new supplier
+  const { data, error } = await supabase
+    .from('suppliers')
+    .insert({ name })
+    .select('id')
+    .single();
+
+  if (error) throw new Error(`Could not create supplier: ${error.message}`);
+
+  // Refresh suppliers list so it shows next time
+  await fetchSuppliers();
+  return data.id;
+};
+
 // Add a new part
 const addPart = async () => {
   try {
@@ -82,6 +109,8 @@ const addPart = async () => {
       return;
     }
 
+    const supplierId = await resolveSupplier();
+
     const { error } = await supabase
       .from('parts_usage')
       .insert([{
@@ -90,7 +119,7 @@ const addPart = async () => {
         part_number: newPart.value.part_number || null,
         quantity: newPart.value.quantity,
         unit_cost: newPart.value.unit_cost,
-        supplier_id: newPart.value.supplier_id || null,
+        supplier_id: supplierId,
         notes: newPart.value.notes || null
       }]);
 
@@ -105,6 +134,7 @@ const addPart = async () => {
       supplier_id: null,
       notes: ''
     };
+    supplierSearch.value = '';
 
     showAddForm.value = false;
     await fetchParts();
@@ -215,17 +245,19 @@ watch(() => props.jobId, (newJobId) => {
         </div>
 
         <div class="form-group">
-          <label for="supplier_id">Supplier</label>
-          <select
-            id="supplier_id"
-            v-model="newPart.supplier_id"
+          <label for="supplier_name">Supplier</label>
+          <input
+            id="supplier_name"
+            v-model="supplierSearch"
+            type="text"
+            list="supplier-options"
             class="form-input"
-          >
-            <option :value="null">Select supplier</option>
-            <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
-              {{ supplier.name }}
-            </option>
-          </select>
+            placeholder="Type or select supplier"
+            autocomplete="off"
+          />
+          <datalist id="supplier-options">
+            <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.name" />
+          </datalist>
         </div>
       </div>
 

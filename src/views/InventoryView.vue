@@ -75,9 +75,21 @@ const deleteItem = async (item) => {
   }
 };
 
-const getStockStatus = (quantity, minStock) => {
+const isServiceItem = (item) => {
+  // Detect service/labour items: no digits in part_number, or description contains service keywords
+  const pn = (item.part_number || '').trim();
+  const desc = (item.description || '').toLowerCase();
+  const hasNoDigits = pn && !/\d/.test(pn);
+  const serviceKeywords = ['labour', 'labor', 'service', 'diagnostic', 'inspection'];
+  const descIsService = serviceKeywords.some(kw => desc.includes(kw));
+  return hasNoDigits || descIsService;
+};
+
+const getStockStatus = (item) => {
+  const quantity = item.quantity ?? 0;
+  if (quantity <= 0 && isServiceItem(item)) return { label: 'Service', class: 'bg-blue-100 text-blue-700' };
   if (quantity <= 0) return { label: 'Out of Stock', class: 'bg-red-100 text-red-700' };
-  if (quantity <= (minStock || 5)) return { label: 'Low Stock', class: 'bg-yellow-100 text-yellow-700' };
+  if (quantity <= (item.min_stock || 5)) return { label: 'Low Stock', class: 'bg-yellow-100 text-yellow-700' };
   return { label: 'In Stock', class: 'bg-green-100 text-green-700' };
 };
 
@@ -209,14 +221,14 @@ onMounted(fetchInventory);
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span
-                  :class="getStockStatus(item.quantity, item.min_stock).class"
+                  :class="getStockStatus(item).class"
                   class="px-2 py-1 text-xs font-medium rounded"
                 >
-                  {{ getStockStatus(item.quantity, item.min_stock).label }}
+                  {{ getStockStatus(item).label }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ formatCurrency(item.unit_price) }}
+                {{ formatCurrency(item.sell_price) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ item.supplier || '-' }}
