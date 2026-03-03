@@ -76,24 +76,26 @@ const performSearch = async () => {
 
   try {
     // Search Customers
-    const customerQuery = supabase
+    const { data: custData, error: custErr } = await supabase
       .from('customers')
-      .select('id, name, phone, email')
+      .select('id, name, email')
       .ilike('name', `%${query}%`)
       .limit(5);
 
+    if (custErr) console.error('Customer search error:', custErr.message);
+
     // Search Vehicles
-    const vehicleQuery = supabase
+    const { data: vehData, error: vehErr } = await supabase
       .from('vehicles')
       .select('id, customer_id, rego, vin, make, model')
-      .or(`rego.ilike.%${query}%,vin.ilike.%${query}%,make.ilike.%${query}%,model.ilike.%${query}%`)
+      .ilike('rego', `%${query}%`)
       .limit(5);
 
-    const [customersRes, vehiclesRes] = await Promise.all([customerQuery, vehicleQuery]);
+    if (vehErr) console.error('Vehicle search error:', vehErr.message);
 
     searchResults.value = {
-      customers: customersRes.data || [],
-      vehicles: vehiclesRes.data || []
+      customers: custData || [],
+      vehicles: vehData || []
     };
   } catch (err) {
     console.error('Global search error:', err);
@@ -398,8 +400,8 @@ onUnmounted(() => {
                     <div class="text-sm font-medium text-gray-900">
                       {{ customer.name }}
                     </div>
-                    <div class="text-xs text-gray-500">
-                      {{ customer.phone }} • {{ customer.email }}
+                    <div v-if="customer.email" class="text-xs text-gray-500">
+                      {{ customer.email }}
                     </div>
                   </li>
                 </ul>
