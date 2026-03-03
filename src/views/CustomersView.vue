@@ -8,16 +8,25 @@ const loading = ref(true);
 const errorMsg = ref('');
 const showCustomerEditor = ref(false);
 const selectedCustomer = ref(null);
+const searchQuery = ref('');
+let debounceTimer = null;
 
 const fetchCustomers = async () => {
   try {
     loading.value = true;
     errorMsg.value = '';
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('customers')
       .select('*')
       .order('name', { ascending: true });
+
+    const q = searchQuery.value.trim();
+    if (q) {
+      query = query.ilike('name', `%${q}%`);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
     customers.value = data;
@@ -27,6 +36,11 @@ const fetchCustomers = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const handleSearch = () => {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(fetchCustomers, 300);
 };
 
 const openCustomerEditor = (customer = null) => {
@@ -75,6 +89,15 @@ onMounted(fetchCustomers);
         >
           + New Customer
         </button>
+      </div>
+      <div class="mt-4">
+        <input
+          v-model="searchQuery"
+          @input="handleSearch"
+          type="text"
+          class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+          placeholder="Search customers by name..."
+        />
       </div>
     </header>
 
